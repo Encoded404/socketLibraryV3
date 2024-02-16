@@ -1,28 +1,45 @@
-﻿namespace socketClientV3
+﻿using System.Net;
+using System.Net.Sockets;
+
+namespace socketClientV3
 {
     public class socketClient
     {
-        int currentAutoId = 0;
-        Dictionary<int, pointer> data = new Dictionary<int, pointer>();
-
-        public void addSharedVariable(/* delegate object getFunc(object value), delegate object setFunc(object value),*/ string id = "auto")
+        public void initialize()
         {
-            if(id == "auto")
-            {
-                for(int i  = currentAutoId, pusher = 1; i < pusher;  i++)
-                {
-                    if(data.ContainsKey(i)) pusher = i;
-                    else
-                    {
-                        data.Add(i, );
-                    }
-                }
-            }
+
+        }
+        public void sendBytes(byte[] data, int id)
+        {
+
         }
     }
-    public class pointer
+    // a class that can get the api for the server in the form of a textdocument of values, gets it by calling server with byte = 0;
+    class apiHandler
     {
-        public delegate object get;
-        public delegate object set;
+        byte[] sizeBuffer = new byte[] { 0 };
+        byte[] buffer;
+        Socket APISocket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+        public string apiReference;
+        public void init(IPEndPoint serverIp)
+        {
+            APISocket.Connect(serverIp);
+            APISocket.ReceiveTimeout = 500;
+
+        }
+        public void getAPIText()
+        {
+            try
+            {
+                sizeBuffer = new byte[] { 0 };
+                APISocket.Send(sizeBuffer);
+                APISocket.Receive(sizeBuffer);
+                APISocket.Receive(buffer = new byte[sizeBuffer[0]]);
+            }
+            catch (SocketException ex)
+            {
+                //throw warni
+            }
+        }
     }
 }
